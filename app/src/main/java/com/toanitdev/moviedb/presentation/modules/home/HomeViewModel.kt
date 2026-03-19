@@ -2,8 +2,10 @@ package com.toanitdev.moviedb.presentation.modules.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.toanitdev.moviedb.core.ApiResult
-import com.toanitdev.moviedb.data.repository.MovieRepositoryImpl
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,21 +19,10 @@ class HomeViewModel(val repository: MovieRepository) : ViewModel() {
   private var homeState = MutableStateFlow<HomeState>(HomeState.Initial)
   val homeStateFlow: StateFlow<HomeState> = homeState
 
-
-
+  val movies: Flow<PagingData<Movie>> =
+    repository.getDiscoverMoviesPaging().cachedIn(viewModelScope)
 
   fun fetchDiscoverMovies() {
-    homeState.value = HomeState.Loading
-    viewModelScope.launch {
-      repository.getDiscoverMovies().collect { result ->
-        when (result) {
-          is ApiResult.Success<List<Movie>> ->
-            homeState.value = HomeState.Success(result.data)
-          is ApiResult.Failure ->
-            homeState.value = HomeState.Failure(result.exception)
-        }
-      }
-    }
   }
 }
 

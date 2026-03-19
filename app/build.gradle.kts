@@ -73,6 +73,12 @@ dependencies {
   implementation("io.insert-koin:koin-android")
   implementation("io.insert-koin:koin-androidx-compose")
 
+
+  //Paging 3
+  val pagingVersion = "3.4.2"
+  implementation("androidx.paging:paging-runtime:$pagingVersion")
+  implementation("androidx.paging:paging-compose:$pagingVersion")
+
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
