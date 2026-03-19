@@ -45,11 +45,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
   val moviesState = viewModel.movies.collectAsLazyPagingItems()
-
-  LaunchedEffect(Unit) {
-    viewModel.fetchDiscoverMovies()
-  }
-
   // Get max width of screen and divide by 2 to get the width of each item
   val itemHeight = (((LocalConfiguration.current.screenWidthDp - 24) / 2) / 2) * 3
 

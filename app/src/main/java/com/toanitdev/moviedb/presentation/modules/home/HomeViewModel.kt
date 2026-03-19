@@ -2,28 +2,17 @@ package com.toanitdev.moviedb.presentation.modules.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.toanitdev.moviedb.core.ApiResult
 import com.toanitdev.moviedb.domain.models.Movie
-import com.toanitdev.moviedb.domain.repositories.MovieRepository
+import com.toanitdev.moviedb.domain.usecase.GetDiscoverMoviesPaging
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-class HomeViewModel(val repository: MovieRepository) : ViewModel() {
-
-
-  private var homeState = MutableStateFlow<HomeState>(HomeState.Initial)
-  val homeStateFlow: StateFlow<HomeState> = homeState
+class HomeViewModel(val getDiscoverMoviesPaging: GetDiscoverMoviesPaging) : ViewModel() {
 
   val movies: Flow<PagingData<Movie>> =
-    repository.getDiscoverMoviesPaging().cachedIn(viewModelScope)
+    getDiscoverMoviesPaging().cachedIn(viewModelScope)
 
-  fun fetchDiscoverMovies() {
-  }
 }
 
 
