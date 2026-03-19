@@ -1,5 +1,6 @@
 package com.toanitdev.moviedb.constants
 
+import com.toanitdev.moviedb.BuildConfig
 
-const val BASE_URL = "https://api.themoviedb.org/3/"
-const val API_KEY = ""
+const val BASE_URL = BuildConfig.BASE_URL
+const val API_KEY = BuildConfig.API_KEY

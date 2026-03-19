@@ -19,10 +19,24 @@ android {
   }
 
   buildTypes {
+    debug {
+
+      isDebuggable = true
+      isMinifyEnabled = false
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+      buildConfigField("String", "BASE_URL", "\"${project.properties["BASE_URL_DEV"]}\"")
+      buildConfigField("String", "API_KEY", "\"${project.properties["API_KEY_DEV"]}\"")
+    }
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+      buildConfigField("String", "BASE_URL", "\"${project.properties["BASE_URL_PROD"]}\"")
+      buildConfigField("String", "API_KEY", "\"${project.properties["API_KEY_PROD"]}\"")
     }
+
+
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -33,6 +47,7 @@ android {
   }
   buildFeatures {
     compose = true
+    buildConfig = true
   }
 }
 
