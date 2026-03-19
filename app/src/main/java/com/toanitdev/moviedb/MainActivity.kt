@@ -4,15 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.toanitdev.moviedb.presentation.modules.home.HomeScreen
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.toanitdev.moviedb.presentation.modules.favourite.FavouriteScreen
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +18,31 @@ class MainActivity : ComponentActivity() {
     enableEdgeToEdge()
     setContent {
       MovieDBTheme {
-        HomeScreen()
+        Routines()
       }
     }
   }
+}
+
+
+@Composable
+fun Routines() {
+  val navController = rememberNavController()
+  NavHost(navController = navController, startDestination = Routines.HOME.name) {
+    composable(Routines.HOME.name) {
+      HomeScreen(navController)
+    }
+    composable(Routines.FAVOURITE.name) {
+      FavouriteScreen(navController)
+    }
+  }
+
+}
+
+
+enum class Routines(name: String) {
+  HOME("Home"),
+  FAVOURITE("Fav"),
+  PROFILE("Profile"),
+  DETAIL("Detail")
 }

@@ -6,6 +6,7 @@ import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
 import com.toanitdev.moviedb.data.repository.MovieRepositoryImpl
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
 import com.toanitdev.moviedb.domain.usecase.GetDiscoverMoviesPaging
+import com.toanitdev.moviedb.presentation.modules.favourite.FavouriteViewModel
 import com.toanitdev.moviedb.presentation.modules.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -50,7 +51,10 @@ val appModule = module {
   viewModel {
     HomeViewModel(get())
   }
+  viewModel{
 
+    FavouriteViewModel()
+  }
   // use cases
   single {
     GetDiscoverMoviesPaging(get())

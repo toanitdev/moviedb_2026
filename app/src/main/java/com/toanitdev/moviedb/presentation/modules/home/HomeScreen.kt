@@ -16,12 +16,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,24 +38,53 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
+import com.toanitdev.moviedb.Routines
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
 import org.koin.androidx.compose.koinViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(navController: NavController? = null,viewModel: HomeViewModel = koinViewModel()) {
   val moviesState = viewModel.movies.collectAsLazyPagingItems()
   // Get max width of screen and divide by 2 to get the width of each item
   val itemHeight = (((LocalConfiguration.current.screenWidthDp - 24) / 2) / 2) * 3
 
 
-  Scaffold {
+  Scaffold(
+    modifier = Modifier.fillMaxSize(),
+    topBar = {
+
+      TopAppBar(
+        title = {
+          Text(
+            "MooVedi",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF2ba08b),
+          )
+        },
+        actions = {
+          IconButton(onClick = {
+            navController?.navigate(Routines.FAVOURITE.name)
+          }) {
+            Icon(
+              imageVector = Icons.Default.Bookmarks,
+              contentDescription = "Search",
+              tint = Color.White.copy(alpha = 0.5f)
+            )
+          }
+        }
+      )
+    }
+  ) {
     if (moviesState.itemCount > 0) {
       Column(Modifier.padding(it)) {
         MovieGrid(moviesState, itemHeight)
@@ -61,7 +96,6 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
           Text(
             "Loading...",
             modifier = Modifier
-              .padding(it)
               .padding(16.dp)
           )
         }
@@ -116,17 +150,32 @@ fun MovieItem(movie: Movie, height: Int = 200) {
         .height(height.dp)
     ) {
       val url = "https://image.tmdb.org/t/p/w92" + movie.posterPath
-      AsyncImage(
-        url,
+      Box(
+
         modifier = Modifier
           .height(height.dp)
-          .width(100.dp)
-          .background(Color.Gray.copy(alpha = 0.1f)),
-        contentScale = ContentScale.Crop,
-        contentDescription = null
-      )
+          .fillMaxWidth(),
+        contentAlignment = Alignment.TopStart
+      ) {
+        AsyncImage(
+          url,
+          modifier = Modifier
+            .height(height.dp)
+            .fillMaxWidth()
+            .background(Color.Gray.copy(alpha = 0.1f)),
+          contentScale = ContentScale.Crop,
+          contentDescription = null
+        )
+        IconButton(onClick = {
 
-
+        }) {
+          Icon(
+            imageVector = Icons.Default.BookmarkBorder,
+            contentDescription = "Bookmark",
+            tint = Color.White.copy(alpha = 0.5f)
+          )
+        }
+      }
     }
     Spacer(Modifier.height(8.dp))
     Text(
@@ -152,6 +201,6 @@ fun MovieItem(movie: Movie, height: Int = 200) {
 @Composable
 fun HomeScreenPreview() {
   MovieDBTheme {
-    HomeScreen()
+    HomeScreen(null)
   }
 }

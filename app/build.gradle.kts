@@ -72,12 +72,15 @@ dependencies {
   implementation(platform("io.insert-koin:koin-bom:3.5.6"))
   implementation("io.insert-koin:koin-android")
   implementation("io.insert-koin:koin-androidx-compose")
+  implementation(libs.androidx.navigation.compose)
 
 
   //Paging 3
   val pagingVersion = "3.4.2"
   implementation("androidx.paging:paging-runtime:$pagingVersion")
   implementation("androidx.paging:paging-compose:$pagingVersion")
+
+  implementation("androidx.compose.material:material-icons-extended")
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
