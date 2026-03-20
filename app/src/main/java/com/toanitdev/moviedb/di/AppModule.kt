@@ -3,11 +3,15 @@ package com.toanitdev.moviedb.di
 import com.toanitdev.moviedb.constants.API_KEY
 import com.toanitdev.moviedb.constants.BASE_URL
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
+import com.toanitdev.moviedb.data.repository.FavMovieRepositoryImpl
 import com.toanitdev.moviedb.data.repository.MovieRepositoryImpl
+import com.toanitdev.moviedb.domain.repositories.FavMovieRepository
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
 import com.toanitdev.moviedb.domain.usecase.GetDiscoverMoviesPaging
+import com.toanitdev.moviedb.domain.usecase.GetFavMoviesPaging
 import com.toanitdev.moviedb.presentation.modules.favourite.FavouriteViewModel
 import com.toanitdev.moviedb.presentation.modules.home.HomeViewModel
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -17,6 +21,9 @@ val appModule = module {
 
   // OkHttpClient with AuthInterceptor
   single {
+    val logging = HttpLoggingInterceptor().apply {
+      level = HttpLoggingInterceptor.Level.BODY
+    }
     okhttp3.OkHttpClient.Builder()
       .addInterceptor { chain ->
         val request = chain.request().newBuilder()
@@ -25,9 +32,9 @@ val appModule = module {
           .build()
         chain.proceed(request)
       }
+      .addInterceptor(logging)
       .build()
   }
-
   // Retrofit
   single {
     Retrofit.Builder()
@@ -46,18 +53,23 @@ val appModule = module {
   single<MovieRepository> {
     MovieRepositoryImpl(get())
   }
+  single<FavMovieRepository> {
+    FavMovieRepositoryImpl(get())
+  }
 
   // ViewModel
   viewModel {
     HomeViewModel(get())
   }
   viewModel{
-
-    FavouriteViewModel()
+    FavouriteViewModel(get())
   }
   // use cases
   single {
-    GetDiscoverMoviesPaging(get())
+    GetDiscoverMoviesPaging(get(), get())
+  }
+  single {
+    GetFavMoviesPaging(get())
   }
 
 }

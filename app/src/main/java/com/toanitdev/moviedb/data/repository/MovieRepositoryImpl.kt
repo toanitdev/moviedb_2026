@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.toanitdev.moviedb.core.ApiResult
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
-import com.toanitdev.moviedb.data.repository.paging.MoviePagingSource
+import com.toanitdev.moviedb.data.repository.pagingSource.MoviePagingSource
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
 import kotlinx.coroutines.flow.Flow

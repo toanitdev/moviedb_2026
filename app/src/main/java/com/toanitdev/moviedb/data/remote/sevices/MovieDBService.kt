@@ -10,4 +10,9 @@ interface MovieDBService {
   @GET("discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc")
   suspend fun getDiscoverMovies(@Query("page") page: Int = 1) : ListResponse
 
+
+
+  @GET("account/18556593/favorite/movies")
+  suspend fun getFavMovies(@Query("page") page: Int = 1) : ListResponse
+
 }

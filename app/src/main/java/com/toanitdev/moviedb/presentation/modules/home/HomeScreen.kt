@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,7 +52,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun HomeScreen(navController: NavController? = null,viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = koinViewModel()) {
   val moviesState = viewModel.movies.collectAsLazyPagingItems()
   // Get max width of screen and divide by 2 to get the width of each item
   val itemHeight = (((LocalConfiguration.current.screenWidthDp - 24) / 2) / 2) * 3
@@ -91,7 +91,11 @@ fun HomeScreen(navController: NavController? = null,viewModel: HomeViewModel = k
       }
     } else {
       Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        Row(Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+        Row(
+          Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.Center,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
           CircularProgressIndicator(modifier = Modifier.size(24.dp))
           Text(
             "Loading...",
@@ -166,14 +170,26 @@ fun MovieItem(movie: Movie, height: Int = 200) {
           contentScale = ContentScale.Crop,
           contentDescription = null
         )
-        IconButton(onClick = {
+        if (movie.isFav) {
+          IconButton(onClick = {
 
-        }) {
-          Icon(
-            imageVector = Icons.Default.BookmarkBorder,
-            contentDescription = "Bookmark",
-            tint = Color.White.copy(alpha = 0.5f)
-          )
+          }) {
+            Icon(
+              imageVector = Icons.Default.Bookmark,
+              contentDescription = "Bookmark",
+              tint = Color(0xFF2ba08b)
+            )
+          }
+        } else {
+          IconButton(onClick = {
+
+          }) {
+            Icon(
+              imageVector = Icons.Default.BookmarkBorder,
+              contentDescription = "Bookmark",
+              tint = Color.White.copy(alpha = 0.5f)
+            )
+          }
         }
       }
     }

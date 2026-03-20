@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.google.gson.Gson
 import com.toanitdev.moviedb.constants.IMG_URL
@@ -40,15 +41,16 @@ fun FavouriteScreen(
   viewModel: FavouriteViewModel = koinViewModel()
 ) {
 
+  val favMoviesState = viewModel.favMovies.collectAsLazyPagingItems()
+
   Scaffold {
     LazyColumn(
       modifier = Modifier.padding(it),
       verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(8.dp)
     ) {
-      items(viewModel.favMovies) { item ->
-        FavItem(item)
+      items(favMoviesState.itemCount) { index ->
+        FavItem(favMoviesState[index] ?: return@items)
       }
-
     }
   }
 }

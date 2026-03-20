@@ -10,4 +10,5 @@ data class Movie(
   val posterPath: String,
   @SerializedName("release_date")
   val releaseDate: String,
+  var isFav: Boolean = false
 )
