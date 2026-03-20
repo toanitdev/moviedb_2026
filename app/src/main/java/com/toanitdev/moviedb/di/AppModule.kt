@@ -7,8 +7,10 @@ import com.toanitdev.moviedb.data.repository.FavMovieRepositoryImpl
 import com.toanitdev.moviedb.data.repository.MovieRepositoryImpl
 import com.toanitdev.moviedb.domain.repositories.FavMovieRepository
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
+import com.toanitdev.moviedb.domain.usecase.GetAllFavId
 import com.toanitdev.moviedb.domain.usecase.GetDiscoverMoviesPaging
 import com.toanitdev.moviedb.domain.usecase.GetFavMoviesPaging
+import com.toanitdev.moviedb.domain.usecase.SetFavMovie
 import com.toanitdev.moviedb.presentation.modules.favourite.FavouriteViewModel
 import com.toanitdev.moviedb.presentation.modules.home.HomeViewModel
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,7 +61,7 @@ val appModule = module {
 
   // ViewModel
   viewModel {
-    HomeViewModel(get())
+    HomeViewModel(get(), get(), get())
   }
   viewModel{
     FavouriteViewModel(get())
@@ -70,6 +72,12 @@ val appModule = module {
   }
   single {
     GetFavMoviesPaging(get())
+  }
+  single {
+    SetFavMovie(get())
+  }
+  single {
+    GetAllFavId(get())
   }
 
 }

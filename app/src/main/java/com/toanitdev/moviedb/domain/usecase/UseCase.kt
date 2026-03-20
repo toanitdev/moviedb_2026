@@ -2,6 +2,6 @@ package com.toanitdev.moviedb.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
 
-interface UseCase<T> {
-  operator fun invoke(): Flow<T>
+interface UseCase<Params,T> {
+  operator fun invoke(params: Params): Flow<T>
 }

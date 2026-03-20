@@ -1,9 +1,10 @@
 package com.toanitdev.moviedb.data.repository
 
-import android.app.Service
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.toanitdev.moviedb.core.ApiResult
+import com.toanitdev.moviedb.data.model.request.SetFavMovieRequest
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
 import com.toanitdev.moviedb.data.repository.pagingSource.FavMoviePagingSource
 import com.toanitdev.moviedb.domain.models.Movie
@@ -45,4 +46,25 @@ class FavMovieRepositoryImpl(val service: MovieDBService) : FavMovieRepository {
     ),
     pagingSourceFactory = { return@Pager FavMoviePagingSource(service) }
   ).flow
+
+  override fun setFavMovie(movieId: Int, favorite: Boolean): Flow<ApiResult<String>> {
+    val request = SetFavMovieRequest(
+      mediaType = "movie",
+      mediaId = movieId,
+      favorite = favorite
+    )
+    return flow {
+      try{
+        val data = service.setFavMovie(request)
+
+        if(data.statusCode == 1 || data.statusCode == 12 || data.statusCode == 13) {
+          emit(ApiResult.Success(data.statusMessage))
+        } else {
+          emit(ApiResult.Failure(Exception(data.statusMessage)))
+        }
+      } catch (ex: Exception) {
+        emit(ApiResult.Failure(ex))
+      }
+    }
+  }
 }

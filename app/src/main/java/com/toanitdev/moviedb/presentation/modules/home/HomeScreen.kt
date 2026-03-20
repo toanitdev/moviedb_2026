@@ -28,6 +28,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,9 +56,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = koinViewModel()) {
   val moviesState = viewModel.movies.collectAsLazyPagingItems()
+  val favState = viewModel.favState.collectAsState()
   // Get max width of screen and divide by 2 to get the width of each item
   val itemHeight = (((LocalConfiguration.current.screenWidthDp - 24) / 2) / 2) * 3
-
+  LaunchedEffect(Unit) {
+    viewModel.getFavMoviesIds()
+  }
 
   Scaffold(
     modifier = Modifier.fillMaxSize(),
@@ -87,7 +92,9 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
   ) {
     if (moviesState.itemCount > 0) {
       Column(Modifier.padding(it)) {
-        MovieGrid(moviesState, itemHeight)
+        MovieGrid(moviesState, favState.value ,itemHeight, onChangeFav = { id, fav ->
+            viewModel.updateFavMovie(id, fav)
+        })
       }
     } else {
       Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
@@ -109,7 +116,7 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
 }
 
 @Composable
-fun MovieGrid(movies: LazyPagingItems<Movie>, itemHeight: Int) {
+fun MovieGrid(movies: LazyPagingItems<Movie>, favSet: Set<Int>,  itemHeight: Int, onChangeFav: (id: Int, fav: Boolean) -> Unit) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     contentPadding = PaddingValues(12.dp),
@@ -118,7 +125,9 @@ fun MovieGrid(movies: LazyPagingItems<Movie>, itemHeight: Int) {
     items(count = movies.itemCount) { index ->
       val movie = movies[index]
       movie?.let {
-        MovieItem(movie, height = itemHeight)
+        MovieItem(movie, height = itemHeight, movie.id in favSet, onClickFav = { id, fav ->
+          onChangeFav(id, fav)
+        })
       }
     }
 
@@ -145,7 +154,7 @@ fun MovieGrid(movies: LazyPagingItems<Movie>, itemHeight: Int) {
 }
 
 @Composable
-fun MovieItem(movie: Movie, height: Int = 200) {
+fun MovieItem(movie: Movie, height: Int = 200,isFav: Boolean, onClickFav: (id: Int, fav: Boolean) -> Unit) {
   Column {
 
     Surface(
@@ -170,9 +179,9 @@ fun MovieItem(movie: Movie, height: Int = 200) {
           contentScale = ContentScale.Crop,
           contentDescription = null
         )
-        if (movie.isFav) {
+        if (isFav) {
           IconButton(onClick = {
-
+            onClickFav(movie.id, false)
           }) {
             Icon(
               imageVector = Icons.Default.Bookmark,
@@ -182,7 +191,7 @@ fun MovieItem(movie: Movie, height: Int = 200) {
           }
         } else {
           IconButton(onClick = {
-
+            onClickFav(movie.id, true)
           }) {
             Icon(
               imageVector = Icons.Default.BookmarkBorder,

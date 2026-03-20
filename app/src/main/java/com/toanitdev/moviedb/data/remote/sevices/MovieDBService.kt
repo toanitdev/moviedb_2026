@@ -1,8 +1,11 @@
 package com.toanitdev.moviedb.data.remote.sevices
 
+import com.toanitdev.moviedb.data.model.request.SetFavMovieRequest
+import com.toanitdev.moviedb.data.model.response.ResultResponse
 import com.toanitdev.moviedb.domain.models.ListResponse
-import com.toanitdev.moviedb.domain.models.Movie
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface MovieDBService {
@@ -14,5 +17,9 @@ interface MovieDBService {
 
   @GET("account/18556593/favorite/movies")
   suspend fun getFavMovies(@Query("page") page: Int = 1) : ListResponse
+
+  @POST("account/18556593/favorite")
+  suspend fun setFavMovie(@Body request: SetFavMovieRequest) : ResultResponse
+
 
 }
