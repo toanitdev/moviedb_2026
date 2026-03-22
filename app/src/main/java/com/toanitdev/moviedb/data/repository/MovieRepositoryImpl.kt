@@ -22,7 +22,7 @@ class MovieRepositoryImpl(
 
         if (response.results.isEmpty())
           throw Exception("No movies found")
-        emit(ApiResult.Success(response.results))
+        emit(ApiResult.Success(response.results.map { it.toMovie() }))
       } catch (ex: Exception) {
         emit(ApiResult.Failure(ex))
       }
@@ -37,5 +37,16 @@ class MovieRepositoryImpl(
     ),
     pagingSourceFactory = { MoviePagingSource(movieDBService) }
   ).flow
+
+  override fun getMovieDetails(movieId: Int): Flow<ApiResult<Movie>> {
+    return flow {
+      try {
+        val res = movieDBService.getMovieDetails(movieId).toMovie()
+        emit(ApiResult.Success(data = res))
+      } catch (ex: Exception) {
+        emit(ApiResult.Failure(ex))
+      }
+    }
+  }
 
 }

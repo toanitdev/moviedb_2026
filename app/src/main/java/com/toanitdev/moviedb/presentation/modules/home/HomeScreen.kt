@@ -2,6 +2,7 @@ package com.toanitdev.moviedb.presentation.modules.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.toanitdev.moviedb.Routines
+import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
 import org.koin.androidx.compose.koinViewModel
@@ -92,8 +94,10 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
   ) {
     if (moviesState.itemCount > 0) {
       Column(Modifier.padding(it)) {
-        MovieGrid(moviesState, favState.value ,itemHeight, onChangeFav = { id, fav ->
-            viewModel.updateFavMovie(id, fav)
+        MovieGrid(moviesState, favState.value, itemHeight, onChangeFav = { id, fav ->
+          viewModel.updateFavMovie(id, fav)
+        }, onItemClick = { id ->
+          navController?.navigate(Routines.DETAIL.name + "/$id")
         })
       }
     } else {
@@ -116,7 +120,13 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
 }
 
 @Composable
-fun MovieGrid(movies: LazyPagingItems<Movie>, favSet: Set<Int>,  itemHeight: Int, onChangeFav: (id: Int, fav: Boolean) -> Unit) {
+private fun MovieGrid(
+  movies: LazyPagingItems<Movie>,
+  favSet: Set<Int>,
+  itemHeight: Int,
+  onChangeFav: (id: Int, fav: Boolean) -> Unit,
+  onItemClick: (id: Int) -> Unit
+) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     contentPadding = PaddingValues(12.dp),
@@ -127,6 +137,8 @@ fun MovieGrid(movies: LazyPagingItems<Movie>, favSet: Set<Int>,  itemHeight: Int
       movie?.let {
         MovieItem(movie, height = itemHeight, movie.id in favSet, onClickFav = { id, fav ->
           onChangeFav(id, fav)
+        }, onClick = {
+          onItemClick(movie.id)
         })
       }
     }
@@ -154,15 +166,20 @@ fun MovieGrid(movies: LazyPagingItems<Movie>, favSet: Set<Int>,  itemHeight: Int
 }
 
 @Composable
-fun MovieItem(movie: Movie, height: Int = 200,isFav: Boolean, onClickFav: (id: Int, fav: Boolean) -> Unit) {
-  Column {
+private fun MovieItem(
+  movie: Movie,
+  height: Int = 200,
+  isFav: Boolean,
+  onClickFav: (id: Int, fav: Boolean) -> Unit, onClick: () -> Unit
+) {
+  Column(Modifier.clickable(enabled = true, onClick = onClick)) {
 
     Surface(
       color = Color.Gray, modifier = Modifier
         .fillMaxSize()
         .height(height.dp)
     ) {
-      val url = "https://image.tmdb.org/t/p/w92" + movie.posterPath
+      val url = IMG_POSTER_URL + movie.posterPath
       Box(
 
         modifier = Modifier
@@ -224,7 +241,7 @@ fun MovieItem(movie: Movie, height: Int = 200,isFav: Boolean, onClickFav: (id: I
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
   MovieDBTheme {
     HomeScreen(null)
   }

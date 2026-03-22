@@ -16,7 +16,7 @@ class FavMoviePagingSource(val service: MovieDBService): PagingSource<Int, Movie
       val response = service.getFavMovies(page)
 
       LoadResult.Page(
-        data = response.results,
+        data = response.results.map { it.toMovie() },
         prevKey = if(page == 1) null else page -1,
         nextKey = if(response.results.isEmpty()) null else page + 1
       )

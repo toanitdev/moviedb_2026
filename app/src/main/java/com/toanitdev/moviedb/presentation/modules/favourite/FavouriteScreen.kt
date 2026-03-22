@@ -1,5 +1,6 @@
 package com.toanitdev.moviedb.presentation.modules.favourite
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +31,7 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.google.gson.Gson
-import com.toanitdev.moviedb.constants.IMG_URL
+import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.moviesJson
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
@@ -63,6 +64,8 @@ fun FavouriteScreen(
 
         FavItem(movie, onFavClick = {
           viewModel.removeFavMovie(movie.id)
+        }, onClick = {
+          navController?.navigate("Detail/${movie.id}")
         })
       }
     }
@@ -72,14 +75,14 @@ fun FavouriteScreen(
 
 @Preview
 @Composable
-fun FavouriteScreenPreview() {
+private fun FavouriteScreenPreview() {
   MovieDBTheme {
     FavouriteContent(Gson().fromJson(moviesJson, Array<Movie>::class.java).toList(), onFavClick = {})
   }
 }
 
 @Composable
-fun FavouriteContent(movies: List<Movie>, onFavClick: (Movie) -> Unit) {
+private fun FavouriteContent(movies: List<Movie>, onFavClick: (Movie) -> Unit, onItemClick: (Int) -> Unit = {}) {
   Scaffold {
     LazyColumn(
       modifier = Modifier.padding(it), contentPadding = PaddingValues(8.dp)
@@ -87,6 +90,8 @@ fun FavouriteContent(movies: List<Movie>, onFavClick: (Movie) -> Unit) {
       items(movies) { item ->
         FavItem(item, onFavClick = {
           onFavClick(item)
+        }, onClick = {
+          onItemClick(item.id)
         })
       }
     }
@@ -95,11 +100,11 @@ fun FavouriteContent(movies: List<Movie>, onFavClick: (Movie) -> Unit) {
 
 
 @Composable
-fun FavItem(movie: Movie, onFavClick: () -> Unit = {}) {
-  Card(modifier = Modifier.height(120.dp).padding(bottom = 8.dp)) {
+private fun FavItem(movie: Movie, onFavClick: () -> Unit = {}, onClick: () -> Unit = {}) {
+  Card(modifier = Modifier.height(120.dp).padding(bottom = 8.dp).clickable(enabled = true, onClick = onClick)) {
     Row {
       AsyncImage(
-        IMG_URL + movie.posterPath,
+        IMG_POSTER_URL + movie.posterPath,
         contentDescription = null,
         modifier = Modifier
           .height(120.dp)

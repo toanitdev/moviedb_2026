@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.toanitdev.moviedb.core.ApiResult
-import com.toanitdev.moviedb.data.model.request.SetFavMovieRequest
+import com.toanitdev.moviedb.data.dto.request.SetFavMovieRequest
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
 import com.toanitdev.moviedb.data.repository.pagingSource.FavMoviePagingSource
 import com.toanitdev.moviedb.domain.models.Movie
