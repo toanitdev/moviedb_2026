@@ -64,7 +64,7 @@ val appModule = module {
     HomeViewModel(get(), get(), get())
   }
   viewModel{
-    FavouriteViewModel(get())
+    FavouriteViewModel(get(), get())
   }
   // use cases
   single {

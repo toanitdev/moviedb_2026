@@ -17,6 +17,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,14 +44,26 @@ fun FavouriteScreen(
 ) {
 
   val favMoviesState = viewModel.favMovies.collectAsLazyPagingItems()
+  val favRemovedIds = viewModel.favRemovedIds.collectAsState()
+
+  LaunchedEffect(Unit) {
+    viewModel.initLoadFavMovies()
+  }
 
   Scaffold {
     LazyColumn(
-      modifier = Modifier.padding(it),
-      verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(8.dp)
+      modifier = Modifier.padding(it), contentPadding = PaddingValues(8.dp)
     ) {
       items(favMoviesState.itemCount) { index ->
-        FavItem(favMoviesState[index] ?: return@items)
+        val movie = favMoviesState[index] ?: return@items
+
+        if (movie.id in favRemovedIds.value) {
+          return@items
+        }
+
+        FavItem(movie, onFavClick = {
+          viewModel.removeFavMovie(movie.id)
+        })
       }
     }
   }
@@ -60,19 +74,20 @@ fun FavouriteScreen(
 @Composable
 fun FavouriteScreenPreview() {
   MovieDBTheme {
-    FavouriteContent(Gson().fromJson(moviesJson, Array<Movie>::class.java).toList())
+    FavouriteContent(Gson().fromJson(moviesJson, Array<Movie>::class.java).toList(), onFavClick = {})
   }
 }
 
 @Composable
-fun FavouriteContent(movies: List<Movie>) {
+fun FavouriteContent(movies: List<Movie>, onFavClick: (Movie) -> Unit) {
   Scaffold {
     LazyColumn(
-      modifier = Modifier.padding(it),
-      verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(8.dp)
+      modifier = Modifier.padding(it), contentPadding = PaddingValues(8.dp)
     ) {
       items(movies) { item ->
-        FavItem(item)
+        FavItem(item, onFavClick = {
+          onFavClick(item)
+        })
       }
     }
   }
@@ -80,8 +95,8 @@ fun FavouriteContent(movies: List<Movie>) {
 
 
 @Composable
-fun FavItem(movie: Movie) {
-  Card(modifier = Modifier.height(120.dp)) {
+fun FavItem(movie: Movie, onFavClick: () -> Unit = {}) {
+  Card(modifier = Modifier.height(120.dp).padding(bottom = 8.dp)) {
     Row {
       AsyncImage(
         IMG_URL + movie.posterPath,
@@ -97,7 +112,7 @@ fun FavItem(movie: Movie) {
       }
       Column(modifier = Modifier.width(42.dp), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
         IconButton(onClick = {
-
+          onFavClick()
         }) {
           Icon(imageVector = Icons.Default.Bookmark, contentDescription = "Bookmark", tint = Color(0xFF2ba08b))
         }
