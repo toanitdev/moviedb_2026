@@ -1,4 +1,4 @@
-package com.toanitdev.moviedb.data.dto.request
+package com.toanitdev.moviedb.data.remote.request
 
 import com.google.gson.annotations.SerializedName
 

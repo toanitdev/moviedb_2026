@@ -1,7 +1,5 @@
 package com.toanitdev.moviedb.domain.models
 
-import com.google.gson.annotations.SerializedName
-
 data class Movie(
   val id: Int,
   val title: String,
@@ -13,5 +11,6 @@ data class Movie(
   var voteCount: Int,
   var productionCompanies: List<ProductionCompany> = emptyList(),
   var genres: List<Genre> = emptyList(),
-  var posters: List<Poster> = emptyList()
+  var posters: List<Poster> = emptyList(),
+  var casts: List<Cast> = emptyList()
 )

@@ -2,6 +2,7 @@ package com.toanitdev.moviedb.data.repository.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.toanitdev.moviedb.data.mapper.toDomain
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.domain.repositories.FavMovieRepository
@@ -16,7 +17,7 @@ class FavMoviePagingSource(val service: MovieDBService): PagingSource<Int, Movie
       val response = service.getFavMovies(page)
 
       LoadResult.Page(
-        data = response.results.map { it.toMovie() },
+        data = response.results.map { it.toDomain() },
         prevKey = if(page == 1) null else page -1,
         nextKey = if(response.results.isEmpty()) null else page + 1
       )

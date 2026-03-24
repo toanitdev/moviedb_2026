@@ -45,7 +45,7 @@ fun Routines() {
         navArgument("movieId") { type = NavType.IntType }
       )) { backStackEntry ->
       val movieId = backStackEntry.arguments?.getInt("movieId")
-      MovieDetailScreen(movieId)
+      MovieDetailScreen(navController, movieId)
     }
   }
 

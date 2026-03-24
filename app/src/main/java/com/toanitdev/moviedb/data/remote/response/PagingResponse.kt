@@ -1,8 +1,8 @@
-package com.toanitdev.moviedb.data.dto.response
+package com.toanitdev.moviedb.data.remote.response
 
 import com.google.gson.annotations.SerializedName
-import com.toanitdev.moviedb.domain.models.Movie
-data class ListResponse<T>(
+
+data class PagingResponse<T>(
   val page: Int,
   val results: List<T>,
   @SerializedName("total_pages")
