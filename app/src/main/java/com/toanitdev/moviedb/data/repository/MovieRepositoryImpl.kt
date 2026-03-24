@@ -6,6 +6,7 @@ import com.toanitdev.moviedb.core.ApiResult
 import com.toanitdev.moviedb.data.remote.sevices.MovieDBService
 import com.toanitdev.moviedb.data.repository.pagingSource.MoviePagingSource
 import com.toanitdev.moviedb.domain.models.Movie
+import com.toanitdev.moviedb.domain.models.Poster
 import com.toanitdev.moviedb.domain.repositories.MovieRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -42,11 +43,33 @@ class MovieRepositoryImpl(
     return flow {
       try {
         val res = movieDBService.getMovieDetails(movieId).toMovie()
+        val posters = movieDBService.getMovieImages(movieId).posters.map { Poster(
+          filePath = it.filePath,
+          width = it.width,
+          height = it.height
+        ) }
+        res.posters = posters
         emit(ApiResult.Success(data = res))
       } catch (ex: Exception) {
         emit(ApiResult.Failure(ex))
       }
     }
+  }
+
+  override fun getMoviePosters(movieId: Int): Flow<ApiResult<List<Poster>>> {
+    return flow {
+      try {
+        val posters = movieDBService.getMovieImages(movieId).posters.map { Poster(
+          filePath = it.filePath,
+          width = it.width,
+          height = it.height
+        ) }
+        emit(ApiResult.Success(data = posters))
+      } catch (ex: Exception) {
+        emit(ApiResult.Failure(ex))
+      }
+    }
+
   }
 
 }

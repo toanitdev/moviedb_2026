@@ -1,6 +1,7 @@
 package com.toanitdev.moviedb.data.remote.sevices
 
 import com.toanitdev.moviedb.data.dto.request.SetFavMovieRequest
+import com.toanitdev.moviedb.data.dto.response.ImageResponse
 import com.toanitdev.moviedb.data.dto.response.ResultResponse
 import com.toanitdev.moviedb.data.dto.response.ListResponse
 import com.toanitdev.moviedb.data.dto.response.MovieResponse
@@ -25,6 +26,10 @@ interface MovieDBService {
 
   @GET("movie/{movie_id}")
   suspend fun getMovieDetails(@Path("movie_id") movieId: Int) : MovieResponse
+
+
+  @GET("movie/{movie_id}/images?include_image_language=en-US")
+  suspend fun getMovieImages(@Path("movie_id") movieId: Int) : ImageResponse
 
 
 }

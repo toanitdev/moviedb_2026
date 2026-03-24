@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.sharp.StarHalf
@@ -40,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.toanitdev.moviedb.constants.IMG_LOGO_URL
 import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
@@ -84,60 +91,74 @@ fun MovieDetailScreen(movieId: Int? = null, viewModel: MovieDetailViewModel = ko
   }
 }
 
-  @SuppressLint("ConfigurationScreenWidthHeight")
-  @Composable
-  private fun MovieDetailContent(movie: Movie? = null) {
+@SuppressLint("ConfigurationScreenWidthHeight")
+@Composable
+private fun MovieDetailContent(movie: Movie? = null) {
 
-    val configuration = LocalConfiguration.current
-    val height = configuration.screenHeightDp.dp
-    Scaffold {
+  val configuration = LocalConfiguration.current
+  val height = configuration.screenHeightDp.dp
+  Scaffold {
+    Box(
+      modifier = Modifier
+        .padding(it)
+        .fillMaxSize()
+    ) {
+      AsyncImage(
+        "$IMG_POSTER_URL${movie?.posterPath}",
+        contentScale = ContentScale.FillWidth,
+        contentDescription = "",
+        modifier = Modifier.fillMaxWidth()
+      )
       Box(
         modifier = Modifier
-          .padding(it)
           .fillMaxSize()
+          .background(
+            brush = Brush.linearGradient(
+              colorStops = arrayOf(
+                0.0f to Color(0x77141218),
+                0.5f to Color(0xD3141218),
+                0.7f to Color(0xEE141218),
+                1.0f to Color(0xFF141218),
+              ),
+              start = Offset(0f, 0f),
+              end = Offset(0f, 1500f),
+            )
+          )
       ) {
-        AsyncImage(
-          "$IMG_POSTER_URL${movie?.posterPath}",
-          contentScale = ContentScale.FillWidth,
-          contentDescription = "",
-          modifier = Modifier.fillMaxWidth()
-        )
-        Box(
-          modifier = Modifier
-            .fillMaxSize()
-            .background(
-              brush = Brush.linearGradient(
-                colorStops = arrayOf(
-                  0.0f to Color(0x77141218),
-                  0.5f to Color(0xD3141218),
-                  0.7f to Color(0xEE141218),
-                  1.0f to Color(0xFF141218),
-                ),
-                start = Offset(0f, 0f),
-                end = Offset(0f, 1500f),
-              )
-            )
-        ) {
 
-        }
-        Column(
-          modifier = Modifier
-            .padding(it)
-            .padding(top = height / 16f)
-            .padding(horizontal = 48.dp)
-            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+      }
+      LazyColumn(
+        modifier = Modifier
+          .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+      ) {
 
-          Surface(
-            shadowElevation = 16.dp,
-          ) {
-            AsyncImage(
-              "$IMG_POSTER_URL${movie?.posterPath}",
-              contentScale = ContentScale.FillWidth,
-              contentDescription = "",
-              modifier = Modifier.clip(RoundedCornerShape(4.dp)).width(200.dp).border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
-            )
+        item() {
+          Spacer(Modifier.height(height / 14f))
+          movie?.posters?.let { posters ->
+            LazyRow(
+              horizontalArrangement = Arrangement.spacedBy(16.dp),
+              modifier = Modifier.fillMaxWidth(),
+              contentPadding = PaddingValues(horizontal = 48.dp)
+            ) {
+              items(posters.take(5)) { poster ->
+                Surface(
+                  shadowElevation = 16.dp,
+                ) {
+                  AsyncImage(
+                    "$IMG_POSTER_URL${poster.filePath}",
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "",
+                    modifier = Modifier
+                      .clip(RoundedCornerShape(4.dp))
+                      .width(200.dp)
+                      .height(300.dp)
+                      .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                  )
+                }
+              }
+            }
           }
+
           Spacer(Modifier.height(32.dp))
           movie?.title?.uppercase(Locale.ROOT)?.let { text ->
             Text(
@@ -147,6 +168,8 @@ fun MovieDetailScreen(movieId: Int? = null, viewModel: MovieDetailViewModel = ko
               fontWeight = FontWeight.SemiBold,
               overflow = TextOverflow.Ellipsis,
               maxLines = 2,
+              modifier = Modifier
+                .padding(horizontal = 48.dp)
             )
           }
           movie?.overview?.let { text ->
@@ -157,10 +180,15 @@ fun MovieDetailScreen(movieId: Int? = null, viewModel: MovieDetailViewModel = ko
               fontWeight = FontWeight.Normal,
               maxLines = 1,
               overflow = TextOverflow.Ellipsis,
+              modifier = Modifier
+                .padding(horizontal = 48.dp)
             )
           }
           Spacer(Modifier.height(16.dp))
-          Row {
+          Row(
+            modifier = Modifier
+              .padding(horizontal = 48.dp)
+          ) {
             Icon(
               imageVector = Icons.Default.Star,
               contentDescription = null,
@@ -187,7 +215,7 @@ fun MovieDetailScreen(movieId: Int? = null, viewModel: MovieDetailViewModel = ko
               tint = Color(0xFF2ba08b)
             )
             Text(
-              "(4.5)",
+              "${movie?.voteAverage ?: 0.0} (${movie?.voteCount ?: 0} votes)",
               color = Color.White.copy(alpha = 0.5f),
               fontSize = 12.sp,
               modifier = Modifier.padding(start = 4.dp)
@@ -209,7 +237,98 @@ fun MovieDetailScreen(movieId: Int? = null, viewModel: MovieDetailViewModel = ko
             }
             Spacer(modifier = Modifier.weight(1f))
           }
+
+          Spacer(modifier = Modifier.height(16.dp))
+          FlowRow(
+            Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.Center
+          ) {
+            movie?.genres?.forEach { genre ->
+              Button(
+                onClick = {},
+                modifier = Modifier
+                  .padding(4.dp)
+                  .height(24.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+              ) {
+                Text(
+                  genre.name,
+                  fontSize = 11.sp
+                )
+              }
+
+            }
+          }
+          Column(
+            modifier = Modifier
+              .padding(horizontal = 16.dp)) {
+            Text(
+              "Overview",
+              color = Color.White,
+              fontSize = 16.sp,
+              fontWeight = FontWeight.SemiBold,
+              modifier = Modifier.padding(top = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+              movie?.overview ?: "",
+              color = Color.White.copy(alpha = 0.7f),
+              fontSize = 12.sp,
+              lineHeight = 17.sp,
+              fontWeight = FontWeight.Normal
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+              "Production Companies",
+              color = Color.White,
+              fontSize = 16.sp,
+              fontWeight = FontWeight.SemiBold,
+              modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            LazyRow {
+              items(movie?.productionCompanies ?: emptyList()) { company ->
+                Column(
+                  horizontalAlignment = Alignment.Start,
+                  modifier = Modifier
+                    .padding(end = 8.dp)
+                    .width(120.dp),
+
+                  ) {
+                  AsyncImage(
+                    "$IMG_LOGO_URL${company.logoPath}",
+                    contentScale = ContentScale.FillWidth,
+                    contentDescription = "",
+                    modifier = Modifier
+                      .clip(RoundedCornerShape(4.dp))
+                      .width(120.dp)
+                      .height(120.dp)
+                      .background(Color.White)
+                      .padding(8.dp)
+                      .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                  )
+                  Spacer(modifier = Modifier.height(8.dp))
+                  Text(
+                    company.name,
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    maxLines = 2,
+                    lineHeight = 17.sp,
+                    overflow = TextOverflow.Ellipsis,
+                  )
+                }
+              }
+            }
+          }
+
+
         }
       }
     }
   }
+}

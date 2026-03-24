@@ -11,6 +11,14 @@ data class MovieResponse(
   val posterPath: String,
   @SerializedName("release_date")
   val releaseDate: String,
+  @SerializedName("vote_average")
+  val voteAverage: Float,
+  @SerializedName("vote_count")
+  val voteCount: Int,
+  @SerializedName("genres")
+  val genres: List<GenreResponse>?,
+  @SerializedName("production_companies")
+  val productionCompanies: List<ProductionCompanyResponse>?,
   var isFav: Boolean = false
 ) {
   fun toMovie(): Movie {
@@ -20,7 +28,11 @@ data class MovieResponse(
       overview = overview,
       posterPath = posterPath,
       releaseDate = releaseDate,
-      isFav = isFav
+      isFav = isFav,
+      productionCompanies = productionCompanies?.map { it.toProductionCompany() } ?: emptyList(),
+      genres = genres?.map { it.toGenre() } ?: emptyList(),
+      voteAverage = voteAverage,
+      voteCount = voteCount
     )
   }
 }
