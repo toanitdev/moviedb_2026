@@ -5,16 +5,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.toanitdev.moviedb.presentation.modules.booking.BookingScreen
 import com.toanitdev.moviedb.presentation.modules.details.MovieDetailScreen
 import com.toanitdev.moviedb.presentation.modules.favourite.FavouriteScreen
 import com.toanitdev.moviedb.presentation.modules.home.HomeScreen
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,39 +34,72 @@ class MainActivity : ComponentActivity() {
   }
 }
 
-
+val LocalNavController = compositionLocalOf<NavHostController> {
+  error("No NavController provided")
+}
 @Composable
 fun Routines() {
   val navController = rememberNavController()
-  NavHost(navController = navController, startDestination = Routines.BOOKING.name) {
-    composable(Routines.HOME.name) {
-      HomeScreen(navController)
-    }
-    composable(Routines.FAVOURITE.name) {
-      FavouriteScreen(navController)
+  CompositionLocalProvider(
+    LocalNavController provides navController
+  ) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
+      composable(Screen.Home.route) {
+        HomeScreen()
+      }
+      composable(Screen.Favourite.route) {
+        FavouriteScreen(navController)
+      }
+
+      composable(Screen.Detail.route,
+        arguments = listOf(
+          navArgument("movieId") {
+            type = NavType.IntType
+          }
+        ),
+//      deepLinks = listOf(
+//        navDeepLink {
+//
+//          action = "com.toan.OPEN_DETAIL"
+//          uriPattern = "myapp://detail/{movieId}"
+//        }
+//      )
+      ) { backStackEntry ->
+        val movieId = backStackEntry.arguments?.getInt("movieId")
+        MovieDetailScreen(navController, movieId)
+      }
+      composable(
+        Screen.Booking.route,) {
+        BookingScreen()
+      }
+
+      composable<DeteoScreen>(
+        deepLinks = listOf(
+          navDeepLink {
+
+            action = "com.toan.OPEN_DETAIL"
+            uriPattern = "myapp://detail/{id}" // id phải trùng với tên attribute trong DeteoScreen
+          }
+        )
+      ) { backStackEntry ->
+        val detail: DeteoScreen = backStackEntry.toRoute()
+        MovieDetailScreen(navController,detail.id)
+      }
     }
 
-    composable(
-      Routines.DETAIL.name + "/{movieId}",
-      arguments = listOf(
-        navArgument("movieId") { type = NavType.IntType }
-      )) { backStackEntry ->
-      val movieId = backStackEntry.arguments?.getInt("movieId")
-      MovieDetailScreen(navController, movieId)
-    }
-    composable(
-      Routines.BOOKING.name,) {
-      BookingScreen()
-    }
   }
 
 }
 
+@Serializable
+data class DeteoScreen(val id: Int)
 
-enum class Routines(name: String) {
-  HOME("Home"),
-  FAVOURITE("Fav"),
-  PROFILE("Profile"),
-  DETAIL("Detail/{movieId}"),
-  BOOKING("Booking"),
+sealed class Screen(val route: String) {
+  object Home: Screen("Home")
+  object Favourite: Screen("Fav")
+  object Profile: Screen("Profile")
+  object Detail: Screen("Detail/{movieId}") {
+    fun createRoute(movieId: Int) = "Detail/$movieId"
+  }
+  object Booking: Screen("Booking")
 }

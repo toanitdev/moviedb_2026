@@ -35,6 +35,7 @@ import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.moviesJson
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
+import com.toanitdev.moviedb.ui.theme.Primary
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -119,7 +120,7 @@ private fun FavItem(movie: Movie, onFavClick: () -> Unit = {}, onClick: () -> Un
         IconButton(onClick = {
           onFavClick()
         }) {
-          Icon(imageVector = Icons.Default.Bookmark, contentDescription = "Bookmark", tint = Color(0xFF2ba08b))
+          Icon(imageVector = Icons.Default.Bookmark, contentDescription = "Bookmark", tint = Primary)
         }
       }
     }

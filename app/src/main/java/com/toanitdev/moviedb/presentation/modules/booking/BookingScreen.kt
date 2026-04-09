@@ -50,9 +50,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.toanitdev.moviedb.ui.theme.Green
+import com.toanitdev.moviedb.ui.theme.Accent
+import com.toanitdev.moviedb.ui.theme.BackgroundCard
+import com.toanitdev.moviedb.ui.theme.BackgroundDark
+import com.toanitdev.moviedb.ui.theme.BackgroundSurface
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
-import com.toanitdev.moviedb.ui.theme.Orange
+import com.toanitdev.moviedb.ui.theme.Primary
+import com.toanitdev.moviedb.ui.theme.PrimaryFaded
+import com.toanitdev.moviedb.ui.theme.PrimaryLight
+import com.toanitdev.moviedb.ui.theme.SeatAvailable
+import com.toanitdev.moviedb.ui.theme.SeatSelected
+import com.toanitdev.moviedb.ui.theme.SeatTaken
+import com.toanitdev.moviedb.ui.theme.TextMuted
+import com.toanitdev.moviedb.ui.theme.TextPrimary
+import com.toanitdev.moviedb.ui.theme.TextSecondary
+import com.toanitdev.moviedb.ui.theme.TextTertiary
 
 
 @Preview
@@ -99,8 +111,8 @@ fun BookingScreen() {
                     drawCircle(
                       brush = Brush.radialGradient(
                         colors = listOf(
-                          Color(0x3B2BA08B),
-                          Color(0x032BA08B),
+                          PrimaryLight,
+                          PrimaryFaded,
                         ),
                         center = center,
                         radius = ovalHeight / 2f
@@ -119,7 +131,7 @@ fun BookingScreen() {
                     brush = Brush.linearGradient(
                       colorStops = arrayOf(
                         0.0f to Color.Transparent,
-                        0.5f to Color(0xFF2ba08b),
+                        0.5f to Primary,
                         1.0f to Color.Transparent,
                       )
                     )
@@ -131,7 +143,7 @@ fun BookingScreen() {
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
               Text(
                 "Screen this way".uppercase(),
-                color = Color(0xB3FFFFFF),
+                color = TextSecondary,
                 fontSize = 9.sp,
                 letterSpacing = 6.sp
               )
@@ -146,7 +158,7 @@ fun BookingScreen() {
               Text(
                 "Add popcorn & drinks".uppercase(),
                 fontSize = 26.sp,
-                color = Color(0xE6FFFFFF),
+                color = TextTertiary,
                 fontWeight = FontWeight.Black,
                 letterSpacing = 0.sp,
                 modifier = Modifier.padding(top = 16.dp),
@@ -187,9 +199,9 @@ fun BookingScreen() {
                       isAntiAlias = true
                       color = android.graphics.Color.TRANSPARENT
                       setShadowLayer(
-                        120f,   // blur radius
-                        10f,   // dx — dịch sang phải
-                        -80f,   // dy — dịch xuống dưới
+                        120f,
+                        10f,
+                        -80f,
                         android.graphics.Color.argb(30, 43, 160, 139)
                       )
                     }
@@ -208,18 +220,18 @@ fun BookingScreen() {
                   topStart = 32.dp,
                 )
               )
-              .background(Color(0xff161616))
+              .background(BackgroundCard)
               .padding(16.dp)
               .fillMaxWidth()
           ) {
-            Text("Total amount".uppercase(), fontSize = 10.sp, color = Color(0xCCFFFFFF))
-            Text("$44.50", fontSize = 32.sp, color = Orange, fontWeight = FontWeight.Black)
+            Text("Total amount".uppercase(), fontSize = 10.sp, color = TextTertiary)
+            Text("$44.50", fontSize = 32.sp, color = Accent, fontWeight = FontWeight.Black)
             Spacer(Modifier.height(24.dp))
             Row {
               Row(
                 modifier = Modifier
                   .background(
-                    color = Color(0xFF333138),
+                    color = BackgroundSurface,
                     shape = RoundedCornerShape(6.dp),
                   )
                   .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -228,7 +240,7 @@ fun BookingScreen() {
                 Icon(
                   Icons.Default.CalendarMonth,
                   contentDescription = null,
-                  tint = Green,
+                  tint = Primary,
                   modifier = Modifier.size(16.dp)
                 )
                 Spacer(Modifier.width(12.dp))
@@ -236,14 +248,14 @@ fun BookingScreen() {
                   Text(
                     "MAY 24",
                     fontSize = 11.sp,
-                    color = Color.White.copy(alpha = 0.5f),
+                    color = TextMuted,
                     lineHeight = 11.sp,
                     fontWeight = FontWeight.Light
                   )
                   Text(
                     "19:30 PM",
                     fontSize = 11.sp,
-                    color = Color.White,
+                    color = TextPrimary,
                     lineHeight = 11.sp,
                     fontWeight = FontWeight.SemiBold
                   )
@@ -253,7 +265,7 @@ fun BookingScreen() {
               Row(
                 modifier = Modifier
                   .background(
-                    color = Color(0xFF333138),
+                    color = BackgroundSurface,
                     shape = RoundedCornerShape(6.dp),
                   )
                   .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -262,7 +274,7 @@ fun BookingScreen() {
                 Icon(
                   Icons.Default.EventSeat,
                   contentDescription = null,
-                  tint = Green,
+                  tint = Primary,
                   modifier = Modifier.size(16.dp)
                 )
                 Spacer(Modifier.width(12.dp))
@@ -270,14 +282,14 @@ fun BookingScreen() {
                   Text(
                     "SEATS",
                     fontSize = 11.sp,
-                    color = Color.White.copy(alpha = 0.5f),
+                    color = TextMuted,
                     lineHeight = 11.sp,
                     fontWeight = FontWeight.Light
                   )
                   Text(
                     "A01, A02",
                     fontSize = 11.sp,
-                    color = Color.White,
+                    color = TextPrimary,
                     lineHeight = 11.sp,
                     fontWeight = FontWeight.SemiBold
                   )
@@ -317,7 +329,6 @@ fun SeatSelectionPreview() {
 
 @Composable
 fun SeatSelection() {
-  // Mảng 2 chiều đại diện cho hàng và cột của ghế
   val seats = dummySeats
 
   Column(
@@ -349,35 +360,35 @@ fun SeatSelection() {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Surface(
           shape = RoundedCornerShape(2.dp),
-          color = Color(0xFF333138),
+          color = SeatAvailable,
           modifier = Modifier.size(12.dp)
         ) {
 
         }
         Spacer(Modifier.width(8.dp))
-        Text("Available".uppercase(), fontSize = 10.sp, color = Color(0xCCFFFFFF))
+        Text("Available".uppercase(), fontSize = 10.sp, color = TextTertiary)
       }
       Row(verticalAlignment = Alignment.CenterVertically) {
         Surface(
           shape = RoundedCornerShape(2.dp),
-          color = Color(0xFFfdc002),
+          color = SeatSelected,
           modifier = Modifier.size(12.dp)
         ) {
 
         }
         Spacer(Modifier.width(8.dp))
-        Text("Selected".uppercase(), fontSize = 10.sp, color = Color(0xFFfdc002))
+        Text("Selected".uppercase(), fontSize = 10.sp, color = Accent)
       }
       Row(verticalAlignment = Alignment.CenterVertically) {
         Surface(
           shape = RoundedCornerShape(2.dp),
-          color = Color(0xFF090909),
+          color = SeatTaken,
           modifier = Modifier.size(12.dp)
         ) {
 
         }
         Spacer(Modifier.width(8.dp))
-        Text("Taken".uppercase(), fontSize = 10.sp, color = Color(0xCCFFFFFF))
+        Text("Taken".uppercase(), fontSize = 10.sp, color = TextTertiary)
       }
     }
   }
@@ -405,13 +416,13 @@ fun SeatEmptyItem(name: String = "A1") {
     modifier = Modifier
       .size(32.dp)
       .clip(shape = RoundedCornerShape(8.dp))
-      .background(Color(0xFF333138)),
+      .background(SeatAvailable),
     contentAlignment = Alignment.Center
   ) {
     Icon(
       imageVector = Icons.Default.EventSeat,
       contentDescription = "Seat",
-      tint = Color.White.copy(alpha = 0.85f),
+      tint = TextPrimary.copy(alpha = 0.85f),
       modifier = Modifier.size(16.dp)
     )
   }
@@ -433,13 +444,13 @@ fun SeatTakenItem(name: String = "A1") {
     modifier = Modifier
       .size(32.dp)
       .clip(shape = RoundedCornerShape(8.dp))
-      .background(Color(0xFF090909)),
+      .background(SeatTaken),
     contentAlignment = Alignment.Center
   ) {
     Icon(
       imageVector = Icons.Default.EventSeat,
       contentDescription = "Seat",
-      tint = Color.White.copy(alpha = 0.3f),
+      tint = TextPrimary.copy(alpha = 0.3f),
       modifier = Modifier.size(16.dp)
     )
   }
@@ -451,7 +462,7 @@ fun SeatSelectedItem(name: String = "A1") {
     modifier = Modifier
       .size(32.dp)
       .clip(shape = RoundedCornerShape(8.dp))
-      .background(Color(0xFFfdc002)),
+      .background(SeatSelected),
     contentAlignment = Alignment.Center
   ) {
     Icon(
@@ -469,14 +480,14 @@ fun SeatVipItem(name: String = "A1") {
     modifier = Modifier
       .size(32.dp)
       .clip(shape = RoundedCornerShape(8.dp))
-      .background(Color(0xFF333138))
-      .border(0.5.dp, Color(0xFFfdc002), shape = RoundedCornerShape(8.dp)),
+      .background(SeatAvailable)
+      .border(0.5.dp, Accent, shape = RoundedCornerShape(8.dp)),
     contentAlignment = Alignment.Center
   ) {
     Icon(
       imageVector = Icons.Default.Stars,
       contentDescription = "Seat",
-      tint = Color(0xFFfdc002),
+      tint = Accent,
       modifier = Modifier.size(14.dp)
     )
   }
@@ -484,8 +495,6 @@ fun SeatVipItem(name: String = "A1") {
 
 @Composable
 fun FoodItem(food: Food) {
-
-
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -529,7 +538,7 @@ fun FoodItem(food: Food) {
         Row {
           Text(
             food.name.uppercase(),
-            color = Color.White,
+            color = TextPrimary,
             fontSize = 21.sp,
             fontWeight = FontWeight.Black,
             letterSpacing = 0.sp
@@ -537,14 +546,14 @@ fun FoodItem(food: Food) {
           Spacer(Modifier.weight(1f))
           Text(
             "$${food.price}",
-            color = Color(0xFFfdc002),
+            color = Accent,
             fontSize = 21.sp,
             fontWeight = FontWeight.Black,
             letterSpacing = 0.sp
           )
         }
         Spacer(Modifier.height(12.dp))
-        Text(food.desciption, color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
+        Text(food.desciption, color = TextSecondary, fontSize = 14.sp)
         Spacer(Modifier.height(16.dp))
         Row(
           verticalAlignment = Alignment.Bottom,
@@ -556,7 +565,7 @@ fun FoodItem(food: Food) {
             Icon(
               imageVector = Icons.Outlined.ShoppingBag,
               contentDescription = null,
-              tint = Green
+              tint = Primary
             )
           }
         }
@@ -571,7 +580,7 @@ fun QuantitySelector() {
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .clip(shape = RoundedCornerShape(16.dp))
-      .background(Color(0xFF333138))
+      .background(BackgroundSurface)
       .padding(8.dp)
   ) {
 
@@ -581,14 +590,14 @@ fun QuantitySelector() {
     }, Modifier.size(18.dp)) {
       Icon(
         imageVector =
-          Icons.Default.Remove, contentDescription = null, tint = Color.White
+          Icons.Default.Remove, contentDescription = null, tint = TextPrimary
       )
     }
 
     Spacer(modifier = Modifier.width(12.dp))
     Text(
       "1",
-      color = Color.White,
+      color = TextPrimary,
       fontSize = 17.sp,
       fontWeight = FontWeight.Bold,
       modifier = Modifier.padding(horizontal = 12.dp)
@@ -599,7 +608,7 @@ fun QuantitySelector() {
     }, Modifier.size(18.dp)) {
       Icon(
         imageVector =
-          Icons.Default.Add, contentDescription = null, tint = Color.White
+          Icons.Default.Add, contentDescription = null, tint = TextPrimary
       )
     }
 
@@ -658,5 +667,3 @@ val dummySeats = listOf(
     4, 4, 4, 0, 4, 4, 0, 4, 4, 4
   ),
 )
-
-

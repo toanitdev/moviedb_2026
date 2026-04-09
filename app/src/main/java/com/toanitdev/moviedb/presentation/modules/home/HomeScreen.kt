@@ -46,17 +46,23 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
-import com.toanitdev.moviedb.Routines
+import com.toanitdev.moviedb.DeteoScreen
+import com.toanitdev.moviedb.LocalNavController
+import com.toanitdev.moviedb.Screen
 import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
+import com.toanitdev.moviedb.ui.theme.NeutralGray
+import com.toanitdev.moviedb.ui.theme.Primary
+import com.toanitdev.moviedb.ui.theme.TextMuted
 import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+  val navController = LocalNavController.current
   val moviesState = viewModel.movies.collectAsLazyPagingItems()
   val favState = viewModel.favState.collectAsState()
   // Get max width of screen and divide by 2 to get the width of each item
@@ -75,17 +81,17 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
             "MooVedi",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF2ba08b),
+            color = Primary,
           )
         },
         actions = {
           IconButton(onClick = {
-            navController?.navigate(Routines.FAVOURITE.name)
+            navController?.navigate(Screen.Favourite.route)
           }) {
             Icon(
               imageVector = Icons.Default.Bookmarks,
               contentDescription = "Search",
-              tint = Color.White.copy(alpha = 0.5f)
+              tint = TextMuted
             )
           }
         }
@@ -97,7 +103,9 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel = 
         MovieGrid(moviesState, favState.value, itemHeight, onChangeFav = { id, fav ->
           viewModel.updateFavMovie(id, fav)
         }, onItemClick = { id ->
-          navController?.navigate(Routines.DETAIL.name + "/$id")
+//          navController?.navigate(Screen.Detail.createRoute(id))
+          val deteoScreen = DeteoScreen(id)
+          navController?.navigate(deteoScreen)
         })
       }
     } else {
@@ -175,7 +183,7 @@ private fun MovieItem(
   Column(Modifier.clickable(enabled = true, onClick = onClick)) {
 
     Surface(
-      color = Color.Gray, modifier = Modifier
+      color = NeutralGray, modifier = Modifier
         .fillMaxSize()
         .height(height.dp)
     ) {
@@ -192,7 +200,7 @@ private fun MovieItem(
           modifier = Modifier
             .height(height.dp)
             .fillMaxWidth()
-            .background(Color.Gray.copy(alpha = 0.1f)),
+            .background(NeutralGray.copy(alpha = 0.1f)),
           contentScale = ContentScale.Crop,
           contentDescription = null
         )
@@ -203,7 +211,7 @@ private fun MovieItem(
             Icon(
               imageVector = Icons.Default.Bookmark,
               contentDescription = "Bookmark",
-              tint = Color(0xFF2ba08b)
+              tint = Primary
             )
           }
         } else {
@@ -213,7 +221,7 @@ private fun MovieItem(
             Icon(
               imageVector = Icons.Default.BookmarkBorder,
               contentDescription = "Bookmark",
-              tint = Color.White.copy(alpha = 0.5f)
+              tint = TextMuted
             )
           }
         }
@@ -225,7 +233,7 @@ private fun MovieItem(
       fontSize = 12.sp,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      color = Color.White.copy(alpha = 0.5f)
+      color = TextMuted
     )
     Text(
       movie.title,
@@ -243,6 +251,6 @@ private fun MovieItem(
 @Composable
 private fun HomeScreenPreview() {
   MovieDBTheme {
-    HomeScreen(null)
+    HomeScreen()
   }
 }

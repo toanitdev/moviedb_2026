@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
-import androidx.compose.material.icons.automirrored.rounded.ArrowLeft
 import androidx.compose.material.icons.automirrored.sharp.StarHalf
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -60,6 +59,10 @@ import com.toanitdev.moviedb.constants.IMG_POSTER_URL
 import com.toanitdev.moviedb.constants.IMG_PROFILE_URL
 import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.ui.theme.MovieDBTheme
+import com.toanitdev.moviedb.ui.theme.Primary
+import com.toanitdev.moviedb.ui.theme.TextMuted
+import com.toanitdev.moviedb.ui.theme.TextPrimary
+import com.toanitdev.moviedb.ui.theme.TextSecondary
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
@@ -96,7 +99,7 @@ fun MovieDetailScreen(navController: NavController? = null, movieId: Int?, viewM
         IconButton(onClick = {
           navController?.popBackStack()
         }) {
-          Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = null, tint = Color.White)
+          Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = null, tint = TextPrimary)
         }
       }
       when (val state = movieState.value) {
@@ -204,7 +207,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
                     .clip(RoundedCornerShape(4.dp))
                     .width(200.dp)
                     .height(300.dp)
-                    .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                    .border(1.dp, TextPrimary.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
                 )
               }
             }
@@ -215,7 +218,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
         movie?.title?.uppercase(Locale.ROOT)?.let { text ->
           Text(
             text,
-            color = Color.White,
+            color = TextPrimary,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
             overflow = TextOverflow.Ellipsis,
@@ -227,7 +230,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
         movie?.overview?.let { text ->
           Text(
             text,
-            color = Color.White.copy(alpha = 0.5f),
+            color = TextMuted,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
             maxLines = 1,
@@ -244,31 +247,31 @@ private fun MovieDetailContent(movie: Movie? = null) {
           Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color(0xFF2ba08b)
+            tint = Primary
           )
           Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color(0xFF2ba08b)
+            tint = Primary
           )
           Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color(0xFF2ba08b)
+            tint = Primary
           )
           Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color(0xFF2ba08b)
+            tint = Primary
           )
           Icon(
             imageVector = Icons.AutoMirrored.Sharp.StarHalf,
             contentDescription = null,
-            tint = Color(0xFF2ba08b)
+            tint = Primary
           )
           Text(
             "${movie?.voteAverage ?: 0.0} (${movie?.voteCount ?: 0} votes)",
-            color = Color.White.copy(alpha = 0.5f),
+            color = TextMuted,
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 4.dp)
           )
@@ -319,7 +322,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
         ) {
           Text(
             "Overview",
-            color = Color.White,
+            color = TextPrimary,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 16.dp)
@@ -327,7 +330,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
           Spacer(modifier = Modifier.height(8.dp))
           Text(
             movie?.overview ?: "",
-            color = Color.White.copy(alpha = 0.7f),
+            color = TextSecondary,
             fontSize = 12.sp,
             lineHeight = 17.sp,
             fontWeight = FontWeight.Normal
@@ -336,7 +339,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
 
           Text(
             "Casts",
-            color = Color.White,
+            color = TextPrimary,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 16.dp)
@@ -361,7 +364,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
                       .clip(RoundedCornerShape(4.dp))
                       .width(120.dp)
                       .height(180.dp)
-                      .background(Color.White)
+                      .background(TextPrimary)
                   )
                   Box(
                     modifier = Modifier
@@ -387,7 +390,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
                   ) {
                     Text(
                       company.name,
-                      color = Color.White,
+                      color = TextPrimary,
                       fontSize = 14.sp,
                       fontWeight = FontWeight.SemiBold,
                       maxLines = 2,
@@ -396,7 +399,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
                     )
                     Text(
                       company.character,
-                      color = Color.White.copy(alpha = 0.6f),
+                      color = TextPrimary.copy(alpha = 0.6f),
                       fontSize = 11.sp,
                       fontWeight = FontWeight.Normal,
                       maxLines = 2,
@@ -411,7 +414,7 @@ private fun MovieDetailContent(movie: Movie? = null) {
 
           Text(
             "Production Companies",
-            color = Color.White,
+            color = TextPrimary,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 16.dp)
@@ -435,14 +438,14 @@ private fun MovieDetailContent(movie: Movie? = null) {
                     .clip(RoundedCornerShape(4.dp))
                     .width(120.dp)
                     .height(120.dp)
-                    .background(Color.White)
+                    .background(TextPrimary)
                     .padding(8.dp)
-                    .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                    .border(1.dp, TextPrimary.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                   company.name,
-                  color = Color.White.copy(alpha = 0.8f),
+                  color = TextPrimary.copy(alpha = 0.8f),
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Normal,
                   maxLines = 2,
@@ -452,52 +455,9 @@ private fun MovieDetailContent(movie: Movie? = null) {
               }
             }
           }
+          Spacer(modifier = Modifier.height(100.dp))
         }
       }
-      item {
-        Spacer(modifier = Modifier.height(120.dp))
-      }
-    }
-
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomStart) {
-      Box(
-        modifier = Modifier
-          .height(100.dp)
-          .fillMaxWidth()
-          .background(Color(0xFF212128))
-          .padding(18.dp)
-      ) {
-        Row {
-          Column(
-            modifier = Modifier.fillMaxHeight(),
-          ) {
-            Text(
-              "STARTING\nFROM",
-              color = Color.White.copy(alpha = 0.5f),
-              fontSize = 12.sp,
-              lineHeight = 15.sp,
-            )
-
-            Text(
-              "$10.99",
-              color = Color.White,
-              fontSize = 28.sp,
-              fontWeight = FontWeight.Black
-            )
-          }
-          Spacer(modifier = Modifier.width(24.dp))
-          Button(
-            onClick = {},
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
-          ) {
-            Text("SELECT\nSHOWTIME", textAlign = TextAlign.Center)
-          }
-        }
-      }
-
     }
   }
 }

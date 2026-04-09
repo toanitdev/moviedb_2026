@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+
+  id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -75,7 +77,7 @@ dependencies {
   implementation("io.insert-koin:koin-android")
   implementation("io.insert-koin:koin-androidx-compose")
   implementation(libs.androidx.navigation.compose)
-
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
   //Paging 3
   val pagingVersion = "3.4.2"

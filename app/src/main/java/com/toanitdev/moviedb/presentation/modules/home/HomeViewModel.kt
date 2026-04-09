@@ -10,10 +10,14 @@ import com.toanitdev.moviedb.domain.models.Movie
 import com.toanitdev.moviedb.domain.usecase.GetAllFavId
 import com.toanitdev.moviedb.domain.usecase.GetDiscoverMoviesPaging
 import com.toanitdev.moviedb.domain.usecase.SetFavMovie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class HomeViewModel(
   val getDiscoverMoviesPaging: GetDiscoverMoviesPaging,
